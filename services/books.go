@@ -1,6 +1,7 @@
 package services
 
 import (
+	"book-library-api/dao"
 	"book-library-api/dto"
 	"net/http"
 
@@ -12,10 +13,20 @@ func CreateBook(c *gin.Context) {
 	if err := c.BindJSON(&newBook); err != nil {
 		return
 	}
-	dto.BooksList = append(dto.BooksList, newBook)
+	dao.BooksList = append(dao.BooksList, newBook)
 	c.IndentedJSON(http.StatusCreated, newBook)
 }
 
 func GetBooks(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, dto.BooksList)
+	c.IndentedJSON(http.StatusOK, dao.BooksList)
+}
+
+func GetBookById(c *gin.Context) {
+	id := c.Param("id")
+	book, err := dao.FindBookById(id)
+	if err != nil {
+		c.IndentedJSON(http.StatusNotFound, gin.H{"message": "Book Not found with this Id"})
+		return
+	}
+	c.IndentedJSON(http.StatusOK, book)
 }
