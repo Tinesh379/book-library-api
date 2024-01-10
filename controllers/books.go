@@ -8,10 +8,13 @@ import (
 )
 
 var api string = constants.API_PREFIX
+
 func LibraryBooks() {
 	router := gin.Default()
 	router.GET(api, services.GetBooks)
 	router.POST(api, services.CreateBook)
 	router.GET(api+"/:id", services.GetBookById)
+	router.PATCH(api+"/checkout", services.CheckoutBook)
+	router.PATCH(api+"/return", services.ReturnBook)
 	router.Run("localhost:9090")
 }
